@@ -8,6 +8,7 @@ package myclasses;
 import entity.Buyer;
 import entity.History;
 import entity.Model;
+import entity.Shop;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -25,6 +26,7 @@ public class App {
     private List<Buyer> buyers = new ArrayList<>();
     private List<History> histories = new ArrayList<>();
     private SaverToFiles saverToFiles = new SaverToFiles();
+    private Shop shop = new Shop();
     
     public App(){
         models = saverToFiles.loadModels();
@@ -197,6 +199,7 @@ public class App {
                         ,histories.get(i).getSoldShoes()
                 );
             }
+            shop.setIncome(models.get(numberModel-1).getPrice()+shop.getIncome());
         }
         saverToFiles.saveModels(models);
         saverToFiles.saveHistories(histories);
@@ -204,6 +207,10 @@ public class App {
     }
 
     private void shopIncome() {
+        System.out.println("Income of the shop");
+        System.out.printf("%d euros.%n"
+                ,shop.getIncome()
+        );
         
     }
 
