@@ -124,6 +124,7 @@ public class App {
         buyer.setLastName(scanner.nextLine());
         System.out.println("Phone number of the buyer: ");
         buyer.setTel(scanner.nextInt());
+        buyer.setMoney(0);
         System.out.println("Buyer: "+buyer.toString());
         buyers.add(buyer);
         saverToFiles.saveBuyers(buyers);
@@ -133,12 +134,12 @@ public class App {
         System.out.println("List of registered buyers");
         for (int i = 0; i < buyers.size(); i++) {
             if (buyers.get(i) != null) {
-                System.out.printf("%d. %s %s Tel: %d%n"
+                System.out.printf("%d. %s %s Tel: %d  Money: %d%n"
                         ,i+1
                         ,buyers.get(i).getFirstName()
                         ,buyers.get(i).getLastName()
                         ,buyers.get(i).getTel()
-                
+                        ,buyers.get(i).getMoney()
                 );
             }
         }
@@ -170,12 +171,12 @@ public class App {
         System.out.println("List of buyers");
         for (int i = 0; i < buyers.size(); i++) {
             if (buyers.get(i) != null) {
-                System.out.printf("%d. %s %s. Tel: %d%n"
+                System.out.printf("%d. %s %s. Tel: %d Money: %d%n"
                         ,i+1
                         ,buyers.get(i).getFirstName()
                         ,buyers.get(i).getLastName()
                         ,buyers.get(i).getTel()
-                
+                        ,buyers.get(i).getMoney()
                 );
             }
         }
@@ -199,7 +200,7 @@ public class App {
                         ,histories.get(i).getSoldShoes()
                 );
             }
-            shop.setIncome(models.get(numberModel-1).getPrice()+shop.getIncome());
+            shop.setIncome(models.get(numberModel - 1).getPrice()+shop.getIncome());
         }
         saverToFiles.saveModels(models);
         saverToFiles.saveHistories(histories);
@@ -215,7 +216,23 @@ public class App {
     }
 
     private void addMoney() {
-        
+        System.out.println("List of registered buyers");
+        for (int i = 0; i < buyers.size(); i++) {
+            if (buyers.get(i) != null) {
+                System.out.printf("%d. %s %s Tel: %d Money: %d%n"
+                        ,i+1
+                        ,buyers.get(i).getFirstName()
+                        ,buyers.get(i).getLastName()
+                        ,buyers.get(i).getTel()
+                        ,buyers.get(i).getMoney()
+                );
+            }
+        }
+        System.out.print("Choose number of the buyer: ");
+        int numberUser=scanner.nextInt();scanner.nextLine();
+        System.out.print("Enter the money that he has: ");
+        int numberMoney=scanner.nextInt();scanner.nextLine();
+        buyers.get(numberUser-1).setMoney(buyers.get(numberUser-1).getMoney()+numberMoney);
     }
     
 }

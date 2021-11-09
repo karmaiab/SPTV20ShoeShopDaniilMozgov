@@ -14,6 +14,7 @@ import java.io.Serializable;
 public class Buyer implements Serializable{
     private String firstName;
     private String lastName;
+    private int money;
 
     @Override
     public String toString() {
@@ -43,5 +44,13 @@ public class Buyer implements Serializable{
 
     public void setTel(int tel) {
         this.tel = tel;
+    }
+
+    public int getMoney() {
+        return money;
+    }
+
+    public void setMoney(int money) {
+        this.money = money;
     }
 }
