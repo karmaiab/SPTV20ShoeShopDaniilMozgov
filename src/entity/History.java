@@ -7,14 +7,28 @@ package entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
  * @author User
  */
-public class History implements Serializable{
+@Entity
+public class History {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @OneToOne
     private Model model;
+    @OneToOne
     private Buyer buyer;
+    @Temporal(TemporalType.TIMESTAMP)
     private Date soldShoes;
 
     public Model getModel() {
