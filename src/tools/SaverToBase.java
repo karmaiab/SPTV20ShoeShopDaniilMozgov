@@ -28,7 +28,11 @@ public class SaverToBase implements Keeping{
     @Override
     public void saveModels(List<Model> models) {
         tx.begin();
-        em.persist(models);
+        for (int i = 0; i < models.size(); i++) {
+            if (models.get(i).getId() == null) {
+                em.persist(models.get(i));
+            }
+        }
         tx.commit();
         }
 
@@ -46,7 +50,11 @@ public class SaverToBase implements Keeping{
     @Override
     public void saveBuyers(List<Buyer> buyers) {
         tx.begin();
-        em.persist(buyers);
+        for (int i = 0; i < buyers.size(); i++) {
+            if (buyers.get(i).getId() == null) {
+                em.persist(buyers.get(i));
+            }
+        }
         tx.commit();
     }
 
@@ -64,7 +72,11 @@ public class SaverToBase implements Keeping{
     @Override
     public void saveHistories(List<History> histories) {
         tx.begin();
-        em.persist(histories);
+        for (int i = 0; i < histories.size(); i++) {
+            if (histories.get(i).getId() == null) {
+                em.persist(histories.get(i));
+            }
+        }
         tx.commit();
     }
 
@@ -72,7 +84,7 @@ public class SaverToBase implements Keeping{
     public List<History> loadHistories() {
         List<History> histories = null;
         try {
-            return em.createQuery("SELECT b FROM histories b").getResultList();
+            return em.createQuery("SELECT h FROM histories h").getResultList();
         } catch (Exception e) {
             histories = new ArrayList<>();
         }

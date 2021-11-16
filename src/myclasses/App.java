@@ -29,7 +29,7 @@ public class App {
     private List<Buyer> buyers = new ArrayList<>();
     private List<History> histories = new ArrayList<>();
     private Shop shop = new Shop();
-    private Keeping keeper;
+    private Keeping keeper = new SaverToBase();
     
     public App(){
         if (toFile) {
