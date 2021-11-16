@@ -9,11 +9,13 @@ import entity.Buyer;
 import entity.History;
 import entity.Model;
 import entity.Shop;
+import interfaces.Keeping;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Scanner;
+import tools.SaverToBase;
 import tools.SaverToFiles;
 
 /**
@@ -21,17 +23,24 @@ import tools.SaverToFiles;
  * @author User
  */
 public class App {
+    public static boolean toFile = false;
     private Scanner scanner = new Scanner(System.in);
     private List<Model> models = new ArrayList<>();
     private List<Buyer> buyers = new ArrayList<>();
     private List<History> histories = new ArrayList<>();
-    private SaverToFiles saverToFiles = new SaverToFiles();
     private Shop shop = new Shop();
+    private Keeping keeper;
     
     public App(){
-        models = saverToFiles.loadModels();
-        buyers = saverToFiles.loadBuyers();
-        histories = saverToFiles.loadHistories();
+        if (toFile) {
+            keeper = new SaverToFiles();
+        }else{
+            keeper = new SaverToBase();
+        }
+            
+        models = keeper.loadModels();
+        buyers = keeper.loadBuyers();
+        histories = keeper.loadHistories();
     }
     
     public void run() {
@@ -94,7 +103,7 @@ public class App {
         model.setCount(model.getQuantity());
         models.add(model);
         System.out.println("Shoe: "+model.toString());
-        saverToFiles.saveModels(models);
+        keeper.saveModels(models);
         
     }
 
@@ -127,7 +136,7 @@ public class App {
         buyer.setMoney(0);
         System.out.println("Buyer: "+buyer.toString());
         buyers.add(buyer);
-        saverToFiles.saveBuyers(buyers);
+        keeper.saveBuyers(buyers);
     }
 
     private void listBuyer() {
@@ -202,8 +211,8 @@ public class App {
             }
             shop.setIncome(models.get(numberModel - 1).getPrice()+shop.getIncome());
         }
-        saverToFiles.saveModels(models);
-        saverToFiles.saveHistories(histories);
+        keeper.saveModels(models);
+        keeper.saveHistories(histories);
         System.out.println("----------------");
     }
 

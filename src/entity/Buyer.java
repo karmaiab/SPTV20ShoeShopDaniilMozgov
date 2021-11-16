@@ -16,7 +16,7 @@ import javax.persistence.Id;
  * @author User
  */
 @Entity
-public class Buyer {
+public class Buyer implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -60,5 +60,13 @@ public class Buyer {
 
     public void setMoney(int money) {
         this.money = money;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

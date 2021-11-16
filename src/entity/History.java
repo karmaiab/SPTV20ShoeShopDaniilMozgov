@@ -20,7 +20,7 @@ import javax.persistence.TemporalType;
  * @author User
  */
 @Entity
-public class History {
+public class History implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -53,5 +53,13 @@ public class History {
 
     public void setSoldShoes(Date soldShoes) {
         this.soldShoes = soldShoes;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

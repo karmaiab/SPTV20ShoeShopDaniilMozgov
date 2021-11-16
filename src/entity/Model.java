@@ -10,17 +10,20 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 /**
  *
  * @author User
  */
 @Entity
-public class Model {
+public class Model implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @OneToOne
     private String modelName;
+    @OneToOne
     private String brand;
     private int size;
     private int price;
@@ -80,6 +83,14 @@ public class Model {
     @Override
     public String toString() {
         return "Model{" + "modelName=" + modelName + ", brand=" + brand + ", size=" + size + ", price=" + price + ", quantity=" + quantity + ", count=" + count + '}';
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
     
 }

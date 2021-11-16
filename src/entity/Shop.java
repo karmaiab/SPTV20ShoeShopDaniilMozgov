@@ -5,7 +5,6 @@
  */
 package entity;
 
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,10 +13,7 @@ import javax.persistence.Id;
  *
  * @author Danek
  */
-@Entity
-public class Shop {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class Shop {   
     private int income;
 
     public int getIncome() {
