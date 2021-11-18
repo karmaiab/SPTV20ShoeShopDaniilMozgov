@@ -5,6 +5,8 @@
  */
 package entity;
 
+import java.io.Serializable;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,7 +15,8 @@ import javax.persistence.Id;
  *
  * @author Danek
  */
-public class Shop {   
+public class Shop{   
+
     private int income;
 
     public int getIncome() {
@@ -23,4 +26,5 @@ public class Shop {
     public void setIncome(int income) {
         this.income = income;
     }
+
 }

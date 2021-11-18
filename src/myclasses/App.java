@@ -55,6 +55,7 @@ public class App {
             System.out.println("5: Sell shoes");
             System.out.println("6: Shops income all time");
             System.out.println("7: Add money to buyer");
+            System.out.println("8: Change the model");
             int task = scanner.nextInt(); scanner.nextLine();
             switch (task) {
                 case 0:
@@ -80,6 +81,9 @@ public class App {
                     break;
                 case 7:
                     addMoney();
+                    break;
+                case 8:
+                    changeModel();
                     break;
                 default:
                     System.out.println("Choose the number from the list");
@@ -242,6 +246,27 @@ public class App {
         System.out.print("Enter the money that he has: ");
         int numberMoney=scanner.nextInt();scanner.nextLine();
         buyers.get(numberUser-1).setMoney(buyers.get(numberUser-1).getMoney()+numberMoney);
+    }
+
+    private void changeModel() {
+        System.out.println("Choose what shoes do you want to change");
+        int numberModel = scanner.nextInt();scanner.nextLine();
+        System.out.println("The List of purchaseable shoes");
+        int n = 0;
+        for (int i = 0; i < models.size(); i++) {
+            if (models.get(i) != null && models.get(i).getCount() > 0) {
+                System.out.printf("%d. Brand: %s Name: %s Size: %d Price: %d Qauantity: %d.%n"
+                        ,i+1
+                        ,models.get(i).getBrand()
+                        ,models.get(i).getModelName()
+                        ,models.get(i).getSize()
+                        ,models.get(i).getPrice()
+                        ,models.get(i).getQuantity()
+                ); 
+                n++;
+            }
+        }
+        
     }
     
 }

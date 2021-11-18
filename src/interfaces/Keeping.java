@@ -21,4 +21,5 @@ public interface Keeping {
     public List<Buyer> loadBuyers();
     public void saveHistories (List<History> histories);
     public List<History> loadHistories();
+
 }
