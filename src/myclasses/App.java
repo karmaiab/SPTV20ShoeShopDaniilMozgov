@@ -101,8 +101,8 @@ public class App {
         System.out.println("Amount of shoes in stock");
         model.setQuantity(scanner.nextInt());scanner.nextLine();
         model.setCount(model.getQuantity());
-        models.add(model);
         System.out.println("Shoe: "+model.toString());
+        models.add(model);
         keeper.saveModels(models);
         
     }

@@ -40,7 +40,7 @@ public class SaverToBase implements Keeping{
     public List<Model> loadModels() {
         List<Model> models = null;
         try {
-            return em.createQuery("SELECT m FROM models m").getResultList();
+            return em.createQuery("SELECT m FROM Model m").getResultList();
         } catch (Exception e) {
             models = new ArrayList<>();
         }
@@ -62,7 +62,7 @@ public class SaverToBase implements Keeping{
     public List<Buyer> loadBuyers() {
         List<Buyer> buyers = null;
         try {
-            return em.createQuery("SELECT b FROM buyers b").getResultList();
+            return em.createQuery("SELECT b FROM Buyer b").getResultList();
         } catch (Exception e) {
             buyers = new ArrayList<>();
         }
@@ -84,7 +84,7 @@ public class SaverToBase implements Keeping{
     public List<History> loadHistories() {
         List<History> histories = null;
         try {
-            return em.createQuery("SELECT h FROM histories h").getResultList();
+            return em.createQuery("SELECT h FROM History h").getResultList();
         } catch (Exception e) {
             histories = new ArrayList<>();
         }
