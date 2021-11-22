@@ -55,6 +55,7 @@ public class App {
             System.out.println("6: Add money to buyer");
             System.out.println("7: Change the model");
             System.out.println("8: Change the user");
+            System.out.println("9: Income per month");
             int task = scanner.nextInt(); scanner.nextLine();
             switch (task) {
                 case 0:
@@ -83,6 +84,9 @@ public class App {
                     break;
                 case 8:
                     changeBuyer();
+                    break;
+                case 9:
+                    incomePerMonth();
                     break;
                 default:
                     System.out.println("Choose the number from the list");
@@ -387,6 +391,10 @@ public class App {
                     break;
             }
         } while ("yes".equals(repeat));
+        
+    }
+
+    private void incomePerMonth() {
         
     }
     
