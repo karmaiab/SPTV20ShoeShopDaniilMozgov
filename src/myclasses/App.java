@@ -8,7 +8,6 @@ package myclasses;
 import entity.Buyer;
 import entity.History;
 import entity.Model;
-import entity.Shop;
 import interfaces.Keeping;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -28,7 +27,6 @@ public class App {
     private List<Model> models = new ArrayList<>();
     private List<Buyer> buyers = new ArrayList<>();
     private List<History> histories = new ArrayList<>();
-    private List<Shop> shops = new ArrayList<>();
     private Keeping keeper = new SaverToBase();
     
     public App(){
@@ -41,7 +39,7 @@ public class App {
         models = keeper.loadModels();
         buyers = keeper.loadBuyers();
         histories = keeper.loadHistories();
-        shops = keeper.loadShops();
+
     }
     
     public void run() {
@@ -54,10 +52,9 @@ public class App {
             System.out.println("3: Add a buyer");
             System.out.println("4: List of registered buyers");
             System.out.println("5: Sell shoes");
-            System.out.println("6: Shops income all time");
-            System.out.println("7: Add money to buyer");
-            System.out.println("8: Change the model");
-            System.out.println("9: Change the user");
+            System.out.println("6: Add money to buyer");
+            System.out.println("7: Change the model");
+            System.out.println("8: Change the user");
             int task = scanner.nextInt(); scanner.nextLine();
             switch (task) {
                 case 0:
@@ -79,15 +76,12 @@ public class App {
                     soldShoe();
                     break;
                 case 6:
-                    shopIncome();
-                    break;
-                case 7:
                     addMoney();
                     break;
-                case 8:
+                case 7:
                     changeModel();
                     break;
-                case 9:
+                case 8:
                     changeBuyer();
                     break;
                 default:
@@ -219,26 +213,14 @@ public class App {
                         ,histories.get(i).getSoldShoes()
                 );
             }
-            shops.get(models.get(numberModel - 1).getPrice()+shops.get(i).getIncome());
+            
         }
-        Shop shop = null;
-        shops.add(shop);
-        keeper.saveShops(shops);
         keeper.saveModels(models);
         keeper.saveHistories(histories);
         System.out.println("----------------");
     }
 
-    private void shopIncome() {
-        System.out.println("Income of the shop");
-        for (int i = 0; i < shops.size(); i++) {
-            System.out.printf("%d euros.%n"
-                    ,shops.get(i).getIncome()
-            ); 
-        }
-            
-        
-    }
+    
 
     private void addMoney() {
         System.out.println("List of registered buyers");

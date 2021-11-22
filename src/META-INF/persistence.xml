@@ -5,7 +5,6 @@
     <class>entity.Buyer</class>
     <class>entity.History</class>
     <class>entity.Model</class>
-    <class>entity.Shop</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/SPTV20ShoeShopDaniilMozgov?zeroDateTimeBehavior=convertToNull&amp;characterEncoding=utf8&amp;useUnicode=true"/>
       <property name="javax.persistence.jdbc.user" value="SPTV20ShoeShopDaniilMozgov"/>
