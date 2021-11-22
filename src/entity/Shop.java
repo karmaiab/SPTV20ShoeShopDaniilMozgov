@@ -15,8 +15,11 @@ import javax.persistence.Id;
  *
  * @author Danek
  */
-public class Shop{   
-
+@Entity
+public class Shop implements Serializable{   
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private int income;
 
     public int getIncome() {
@@ -25,6 +28,19 @@ public class Shop{
 
     public void setIncome(int income) {
         this.income = income;
+    }
+
+    @Override
+    public String toString() {
+        return "Shop{" + "income=" + income + '}';
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
 }

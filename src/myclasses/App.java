@@ -28,7 +28,7 @@ public class App {
     private List<Model> models = new ArrayList<>();
     private List<Buyer> buyers = new ArrayList<>();
     private List<History> histories = new ArrayList<>();
-    private Shop shop = new Shop();
+    private List<Shop> shops = new ArrayList<>();
     private Keeping keeper = new SaverToBase();
     
     public App(){
@@ -41,6 +41,7 @@ public class App {
         models = keeper.loadModels();
         buyers = keeper.loadBuyers();
         histories = keeper.loadHistories();
+        shops = keeper.loadShops();
     }
     
     public void run() {
@@ -56,6 +57,7 @@ public class App {
             System.out.println("6: Shops income all time");
             System.out.println("7: Add money to buyer");
             System.out.println("8: Change the model");
+            System.out.println("9: Change the user");
             int task = scanner.nextInt(); scanner.nextLine();
             switch (task) {
                 case 0:
@@ -84,6 +86,9 @@ public class App {
                     break;
                 case 8:
                     changeModel();
+                    break;
+                case 9:
+                    changeBuyer();
                     break;
                 default:
                     System.out.println("Choose the number from the list");
@@ -137,7 +142,8 @@ public class App {
         buyer.setLastName(scanner.nextLine());
         System.out.println("Phone number of the buyer: ");
         buyer.setTel(scanner.nextInt());
-        buyer.setMoney(0);
+        System.out.println("Money that the buyer has");
+        buyer.setMoney(scanner.nextInt());
         System.out.println("Buyer: "+buyer.toString());
         buyers.add(buyer);
         keeper.saveBuyers(buyers);
@@ -213,8 +219,11 @@ public class App {
                         ,histories.get(i).getSoldShoes()
                 );
             }
-            shop.setIncome(models.get(numberModel - 1).getPrice()+shop.getIncome());
+            shops.get(models.get(numberModel - 1).getPrice()+shops.get(i).getIncome());
         }
+        Shop shop = null;
+        shops.add(shop);
+        keeper.saveShops(shops);
         keeper.saveModels(models);
         keeper.saveHistories(histories);
         System.out.println("----------------");
@@ -222,9 +231,12 @@ public class App {
 
     private void shopIncome() {
         System.out.println("Income of the shop");
-        System.out.printf("%d euros.%n"
-                ,shop.getIncome()
-        );
+        for (int i = 0; i < shops.size(); i++) {
+            System.out.printf("%d euros.%n"
+                    ,shops.get(i).getIncome()
+            ); 
+        }
+            
         
     }
 
@@ -247,14 +259,26 @@ public class App {
         int numberMoney=scanner.nextInt();scanner.nextLine();
         buyers.get(numberUser-1).setMoney(buyers.get(numberUser-1).getMoney()+numberMoney);
     }
+    private int getNumber(){
+        int number;
+        do {
+            String strNumber = scanner.nextLine();
+            try {
+                number = Integer.parseInt(strNumber);
+                return number;
+            } catch (NumberFormatException e) {
+                System.out.println("Entered \""+strNumber+"\" pick the model");
+            }
+        } while (true);
+        
+    }
 
     private void changeModel() {
         System.out.println("Choose what shoes do you want to change");
-        int numberModel = scanner.nextInt();scanner.nextLine();
         System.out.println("The List of purchaseable shoes");
         int n = 0;
         for (int i = 0; i < models.size(); i++) {
-            if (models.get(i) != null && models.get(i).getCount() > 0) {
+            if (models.get(i) != null && models.get(i).getQuantity()> 0) {
                 System.out.printf("%d. Brand: %s Name: %s Size: %d Price: %d Qauantity: %d.%n"
                         ,i+1
                         ,models.get(i).getBrand()
@@ -266,6 +290,121 @@ public class App {
                 n++;
             }
         }
+        if (n<1) {
+            System.out.println("No shoes in stock");
+            return;
+        }
+        System.out.print("Choose the shoe that you want to change: ");
+        int numberModel = getNumber();
+        String repeat="yes";
+        do{
+            System.out.println("0: Exit");
+            System.out.println("1: Change brand name");
+            System.out.println("2: Change model name");
+            System.out.println("3: Change size of the shoe");
+            System.out.println("4: Change the price of the shoe");
+            System.out.println("5: Change the quantity in stock");
+            int num = getNumber();
+            switch (num) {
+                case 0:
+                    repeat = "no";
+                    break;
+                case 1:
+                    System.out.println("Enter a new brand name: ");
+                    String newBrand = scanner.nextLine();
+                    models.get(numberModel - 1).setBrand(newBrand);
+                    keeper.saveModels(models);
+                    break;
+                case 2:
+                    System.out.println("Enter a new model name: ");
+                    String newModel = scanner.nextLine();
+                    models.get(numberModel - 1).setModelName(newModel);
+                    keeper.saveModels(models);
+                    break;
+               case 3:
+                    System.out.println("Enter new size of the shoe: ");
+                    int newSize = scanner.nextInt();
+                    models.get(numberModel - 1).setSize(newSize);
+                    keeper.saveModels(models);
+                    break;
+                case 4:
+                    System.out.println("Enter new price of the shoe: ");
+                    int newPrice = scanner.nextInt();
+                    models.get(numberModel - 1).setPrice(newPrice);
+                    keeper.saveModels(models);
+                    break;
+                case 5:
+                    System.out.println("Enter new quanity: ");
+                    int newQuantity = scanner.nextInt();
+                    models.get(numberModel - 1).setQuantity(newQuantity);
+                    keeper.saveModels(models);
+                    break;
+            }
+            }while ("yes".equals(repeat));           
+            
+        
+        
+    }
+
+    private void changeBuyer() {
+        System.out.println("Choose what user you want to change: ");
+        System.out.println("List of registered buyers");
+        int n = 0;
+        for (int i = 0; i < buyers.size(); i++) {
+            if (buyers.get(i) != null) {
+                System.out.printf("%d. %s %s Tel: %d  Money: %d%n"
+                        ,i+1
+                        ,buyers.get(i).getFirstName()
+                        ,buyers.get(i).getLastName()
+                        ,buyers.get(i).getTel()
+                        ,buyers.get(i).getMoney()
+                );
+            }n++;
+        }
+        if (n<1) {
+            System.out.println("No buyer");
+            return;
+        }
+        System.out.print("Choose the shoe that you want to change: ");
+        int numberBuyer = getNumber();
+        String repeat="yes";
+        do {
+            System.out.println("0: Exit");
+            System.out.println("1: Change name of the buyer");
+            System.out.println("2: Change last name of the buyer");
+            System.out.println("3: Change telephone number");
+            System.out.println("4: Change money");
+            int num = getNumber();
+            switch (num) {
+                case 0:
+                    repeat = "no";
+                    break;
+                case 1:
+                    System.out.println("Enter new first name: ");
+                    String newFirstName = scanner.nextLine();
+                    buyers.get(numberBuyer - 1).setFirstName(newFirstName);
+                    keeper.saveBuyers(buyers);
+                    break;
+                case 2:
+                    System.out.println("Enter new last name: ");
+                    String newLastName = scanner.nextLine();
+                    buyers.get(numberBuyer - 1).setLastName(newLastName);
+                    keeper.saveBuyers(buyers);
+                    break;
+                case 3:
+                    System.out.println("Enter new telephone number: ");
+                    int newTel = scanner.nextInt();
+                    buyers.get(numberBuyer - 1).setTel(newTel);
+                    keeper.saveBuyers(buyers);
+                    break;
+                case 4:
+                    System.out.println("Enter new amount of money: ");
+                    int newMoney = scanner.nextInt();
+                    buyers.get(numberBuyer - 1).setMoney(newMoney);
+                    keeper.saveBuyers(buyers);
+                    break;
+            }
+        } while ("yes".equals(repeat));
         
     }
     

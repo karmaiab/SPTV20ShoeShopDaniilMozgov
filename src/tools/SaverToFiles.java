@@ -8,6 +8,7 @@ package tools;
 import entity.Buyer;
 import entity.History;
 import entity.Model;
+import entity.Shop;
 import interfaces.Keeping;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -129,6 +130,16 @@ public class SaverToFiles implements Keeping{
             Logger.getLogger(SaverToFiles.class.getName()).log(Level.SEVERE, "нет такого файла", ex);
         }
        return histories;
+    }
+
+    @Override
+    public void saveShops(List<Shop> shops) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<Shop> loadShops() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

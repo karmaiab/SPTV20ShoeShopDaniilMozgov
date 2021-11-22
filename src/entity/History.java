@@ -28,6 +28,8 @@ public class History implements Serializable{
     private Model model;
     @OneToOne
     private Buyer buyer;
+    @OneToOne
+    private Shop shops;
     @Temporal(TemporalType.TIMESTAMP)
     private Date soldShoes;
 
@@ -61,5 +63,13 @@ public class History implements Serializable{
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Shop getShops() {
+        return shops;
+    }
+
+    public void setShops(Shop shops) {
+        this.shops = shops;
     }
 }
