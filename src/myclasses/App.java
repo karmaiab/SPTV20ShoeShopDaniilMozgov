@@ -11,6 +11,7 @@ import entity.Model;
 import interfaces.Keeping;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Scanner;
@@ -52,10 +53,11 @@ public class App {
             System.out.println("3: Add a buyer");
             System.out.println("4: List of registered buyers");
             System.out.println("5: Sell shoes");
-            System.out.println("6: Add money to buyer");
-            System.out.println("7: Change the model");
-            System.out.println("8: Change the user");
-            System.out.println("9: Income per month");
+            System.out.println("6: Income");
+            System.out.println("7: Add money to buyer");
+            System.out.println("8: Change the model");
+            System.out.println("9: Change the user");
+            System.out.println("10: Income per month");
             int task = scanner.nextInt(); scanner.nextLine();
             switch (task) {
                 case 0:
@@ -77,15 +79,18 @@ public class App {
                     soldShoe();
                     break;
                 case 6:
-                    addMoney();
+                    income();
                     break;
                 case 7:
-                    changeModel();
+                    addMoney();
                     break;
                 case 8:
-                    changeBuyer();
+                    changeModel();
                     break;
                 case 9:
+                    changeBuyer();
+                    break;
+                case 10:
                     incomePerMonth();
                     break;
                 default:
@@ -224,6 +229,16 @@ public class App {
         System.out.println("----------------");
     }
 
+    private void income() {
+        System.out.println("Income of the shop");
+        double income = 0;
+        for (int i = 0; i < histories.size(); i++) {
+            if (histories.get(i) != null) {
+                income += histories.get(i).getModel().getPrice();
+            }
+        }
+        System.out.println(income + " Euros");
+    }
     
 
     private void addMoney() {
@@ -395,7 +410,33 @@ public class App {
     }
 
     private void incomePerMonth() {
-        
+        double income = 0;
+        System.out.println("Pick what year of income do you want to see: ");
+        int years = getNumber();
+        System.out.println("Pick what month of the year: ");
+        int chosenMonth = getNumber() - 1;
+        for (int i = 0; i < histories.size(); i++) {
+            Date date = histories.get(i).getSoldShoes();
+            boolean toSum = summa (date, chosenMonth, years);
+            if (histories.get(i) != null & toSum) {
+                income += histories.get(i).getModel().getPrice();
+            }
+        }
+        System.out.println("Income for the month that you picked");
+        System.out.println(income +" Euros");
     }
+
+    private boolean summa(Date date, int chosenMonth, int years) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        int month = cal.get(Calendar.MONTH);
+        int year = cal.get(Calendar.YEAR);
+        if (month == chosenMonth & year == years) {
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     
 }
