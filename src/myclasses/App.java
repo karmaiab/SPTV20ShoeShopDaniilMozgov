@@ -8,13 +8,19 @@ package myclasses;
 import entity.Buyer;
 import entity.History;
 import entity.Model;
+import facade.BuyerFacade;
+import facade.HistoryFacade;
+import facade.ModelFacade;
 import interfaces.Keeping;
+import static java.lang.reflect.Array.set;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 import tools.SaverToBase;
 import tools.SaverToFiles;
 
@@ -25,21 +31,27 @@ import tools.SaverToFiles;
 public class App {
     public static boolean toFile = false;
     private Scanner scanner = new Scanner(System.in);
-    private List<Model> models = new ArrayList<>();
-    private List<Buyer> buyers = new ArrayList<>();
-    private List<History> histories = new ArrayList<>();
-    private Keeping keeper = new SaverToBase();
+    private BuyerFacade buyerFacade;
+    private ModelFacade modelFacade;
+    private HistoryFacade historyFacade;
+//   private List<Model> models = new ArrayList<>();
+//   private List<Buyer> buyers = new ArrayList<>();
+//   private List<History> histories = new ArrayList<>();
+//   private Keeping keeper = new SaverToBase();
     
     public App(){
-        if (toFile) {
-            keeper = new SaverToFiles();
-        }else{
-            keeper = new SaverToBase();
-        }
-            
-        models = keeper.loadModels();
-        buyers = keeper.loadBuyers();
-        histories = keeper.loadHistories();
+//        if (toFile) {
+//            keeper = new SaverToFiles();
+//        }else{
+//            keeper = new SaverToBase();
+//        }
+//            
+//        models = keeper.loadModels();
+//        buyers = keeper.loadBuyers();
+//        histories = keeper.loadHistories();
+        buyerFacade = new BuyerFacade(Buyer.class);
+        modelFacade = new ModelFacade(Model.class);
+        historyFacade = new HistoryFacade(History.class);
 
     }
     
@@ -114,27 +126,35 @@ public class App {
         model.setQuantity(scanner.nextInt());scanner.nextLine();
         model.setCount(model.getQuantity());
         System.out.println("Shoe: "+model.toString());
-        models.add(model);
-        keeper.saveModels(models);
+        modelFacade.create(model);
+//      models.add(model);
+//      keeper.saveModels(models);
         
     }
 
-    private void listModel() {
+    private Set<Integer> listModel() {
+        Set<Integer> setNumberModels = new HashSet<>();
+        List<Model> models = modelFacade.findAll();
         System.out.println("List of models that are in stock");
         for (int i = 0; i < models.size(); i++) {
             if (models.get(i) != null 
                     && models.get(i).getCount() > 0
                     && models.get(i).getCount() < models.get(i).getQuantity() + 1) {
                 System.out.printf("%d. Brand: %s Name: %s Size: %d Price: %d Qauantity: %d.%n"
-                        ,i+1
+                        ,models.get(i).getId()
                         ,models.get(i).getBrand()
                         ,models.get(i).getModelName()
                         ,models.get(i).getSize()
                         ,models.get(i).getPrice()
                         ,models.get(i).getQuantity()
                 );
+                setNumberModels.add(models.get(i).getId().intValue());
             }
         }
+        if(setNumberModels.isEmpty()){
+            System.out.println("The list is empty");
+        }
+        return setNumberModels;
     }
 
     private void addBuyer() {
@@ -148,28 +168,37 @@ public class App {
         System.out.println("Money that the buyer has");
         buyer.setMoney(scanner.nextInt());
         System.out.println("Buyer: "+buyer.toString());
-        buyers.add(buyer);
-        keeper.saveBuyers(buyers);
+        buyerFacade.create(buyer);
+//        buyers.add(buyer);
+//        keeper.saveBuyers(buyers);
     }
 
-    private void listBuyer() {
+    private Set<Integer> listBuyer() {
         System.out.println("List of registered buyers");
+        Set<Integer> setNumberBuyers = new HashSet<>();
+        List<Buyer> buyers = buyerFacade.findAll();
         for (int i = 0; i < buyers.size(); i++) {
             if (buyers.get(i) != null) {
                 System.out.printf("%d. %s %s Tel: %d  Money: %d%n"
-                        ,i+1
+                        ,buyers.get(i).getId()
                         ,buyers.get(i).getFirstName()
                         ,buyers.get(i).getLastName()
                         ,buyers.get(i).getTel()
                         ,buyers.get(i).getMoney()
                 );
+                setNumberBuyers.add(buyers.get(i).getId().intValue());
             }
         }
+        if (setNumberBuyers.isEmpty()) {
+            System.out.println("The list is empty");
+        }
+        return setNumberBuyers;
     }
 
     private void soldShoe() {
         System.out.println("----------- Sell ----------------");
         System.out.println("The List of purchaseable shoes");
+        List<Model> models = modelFacade.findAll();
         int n = 0;
         for (int i = 0; i < models.size(); i++) {
             if (models.get(i) != null && models.get(i).getCount() > 0) {
@@ -189,6 +218,7 @@ public class App {
             return;
         }
         System.out.println("Choose what shoes do you want to sell");
+        List<Buyer> buyers = buyerFacade.findAll();
         int numberModel = scanner.nextInt();scanner.nextLine();
         System.out.println("List of buyers");
         for (int i = 0; i < buyers.size(); i++) {
@@ -272,6 +302,18 @@ public class App {
             }
         } while (true);
         
+    }
+    
+    private int insertNumber(Set<Integer> setNumbers){
+        int number = 0;
+        do{
+            number = getNumber();
+            if (setNumbers.contains(number)) {
+                break;
+            }
+            System.out.println("Try again: ");
+        }while(true);
+        return number;
     }
 
     private void changeModel() {

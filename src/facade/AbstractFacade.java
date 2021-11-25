@@ -21,32 +21,35 @@ public abstract class AbstractFacade<T> {
     
     private Class<T> entityClass;
     
-    private EntityManagerFactory emf = Persistence.createEntityManagerFactory("SPTV20ShoeShopDaniilMozgovPU");
-    private EntityManager em = emf.createEntityManager();
-    private EntityTransaction tx = em.getTransaction();
 
     public AbstractFacade(Class<T> entityClass) {
         this.entityClass = entityClass;
     }
     
+    protected abstract EntityManager getEntityManager();
+    
     public T find(Long id){
-         return em.find(entityClass,id);
+         return getEntityManager().find(entityClass,id);
     };
     
     public List<T> findAll(){
         try {
-            return em.createQuery("SELECT entity FROM "+entityClass.getName()+"entity").getResultList();
+            return getEntityManager().createQuery("SELECT entity FROM "+entityClass.getName()+"entity").getResultList();
         } catch (Exception e) {
             return new ArrayList<>();
         }
     };
     
     public void create(T entity){
-        em.persist(entity);
+        getEntityManager().getTransaction().begin();
+        getEntityManager().persist(entity);
+        getEntityManager().getTransaction().commit();
     };
     
     public void edit(T entity){
-        em.merge(entity);
+        getEntityManager().getTransaction().begin();
+        getEntityManager().merge(entity);
+        getEntityManager().getTransaction().commit();
     };
     
 }
