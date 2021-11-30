@@ -198,12 +198,13 @@ public class App {
     private void soldShoe() {
         System.out.println("----------- Sell ----------------");
         System.out.println("The List of purchaseable shoes");
+        Set<Integer> setNumberModels = new HashSet<>();
         List<Model> models = modelFacade.findAll();
         int n = 0;
         for (int i = 0; i < models.size(); i++) {
             if (models.get(i) != null && models.get(i).getCount() > 0) {
                 System.out.printf("%d. Brand: %s Name: %s Size: %d Price: %d Qauantity: %d.%n"
-                        ,i+1
+                        ,models.get(i).getId()
                         ,models.get(i).getBrand()
                         ,models.get(i).getModelName()
                         ,models.get(i).getSize()
@@ -211,6 +212,7 @@ public class App {
                         ,models.get(i).getQuantity()
                 ); 
                 n++;
+                setNumberModels.add(models.get(i).getId().intValue());
             }
         }
         if (n < 1) {
@@ -218,49 +220,52 @@ public class App {
             return;
         }
         System.out.println("Choose what shoes do you want to sell");
+        Set<Integer> setNumberBuyers = new HashSet<>();
         List<Buyer> buyers = buyerFacade.findAll();
         int numberModel = scanner.nextInt();scanner.nextLine();
         System.out.println("List of buyers");
         for (int i = 0; i < buyers.size(); i++) {
             if (buyers.get(i) != null) {
                 System.out.printf("%d. %s %s. Tel: %d Money: %d%n"
-                        ,i+1
+                        ,buyers.get(i).getId()
                         ,buyers.get(i).getFirstName()
                         ,buyers.get(i).getLastName()
                         ,buyers.get(i).getTel()
                         ,buyers.get(i).getMoney()
                 );
+                setNumberBuyers.add(buyers.get(i).getId().intValue());
             }
         }
         System.out.println("Choose who do you want to sell it to");
-        int numberBuyer = scanner.nextInt();scanner.nextLine();
+        Set<Integer> setNumberSoldShoes = new HashSet<>();
         History history = new History();
-        history.setModel(models.get(numberModel - 1));
-        history.setBuyer(buyers.get(numberBuyer - 1));
+        int numberBuyer = scanner.nextInt();scanner.nextLine();
+        List<History> histories = historyFacade.findListSoldShoes();
+        Model model = modelFacade.find((long)numberModel);
+        history.setModel(model);
+        history.setBuyer(buyerFacade.find((long)numberBuyer));
         Calendar c = new GregorianCalendar();
         history.setSoldShoes(c.getTime());
-        history.getModel().setCount(history.getModel().getCount() - 1);
-        histories.add(history);
+        model.setCount(model.getCount() - 1);
+        modelFacade.edit(model);
+        historyFacade.edit(history);
         for (int i = 0; i < histories.size(); i++) {
-            if (histories.get(i) != null) {
-                System.out.printf("%d. %s %s bought %s for %d euros, on %s.%n"
-                        ,i+1
-                        ,histories.get(i).getBuyer().getFirstName()
-                        ,histories.get(i).getBuyer().getLastName()
-                        ,histories.get(i).getModel().getModelName()
-                        ,histories.get(i).getModel().getPrice()
-                        ,histories.get(i).getSoldShoes()
-                );
-            }
-            
+            System.out.printf("%d. %s %s bought %s for %d euros, on %s.%n"
+                    ,histories.get(i).getId()
+                    ,histories.get(i).getBuyer().getFirstName()
+                    ,histories.get(i).getBuyer().getLastName()
+                    ,histories.get(i).getModel().getModelName()
+                    ,histories.get(i).getModel().getPrice()
+                    ,histories.get(i).getSoldShoes()
+            );
+            setNumberSoldShoes.add(histories.get(i).getId().intValue()); 
         }
-        keeper.saveModels(models);
-        keeper.saveHistories(histories);
         System.out.println("----------------");
     }
 
     private void income() {
         System.out.println("Income of the shop");
+        List<History> histories = historyFacade.findAll();
         double income = 0;
         for (int i = 0; i < histories.size(); i++) {
             if (histories.get(i) != null) {
@@ -273,6 +278,7 @@ public class App {
 
     private void addMoney() {
         System.out.println("List of registered buyers");
+        List<Buyer> buyers = buyerFacade.findAll();
         for (int i = 0; i < buyers.size(); i++) {
             if (buyers.get(i) != null) {
                 System.out.printf("%d. %s %s Tel: %d Money: %d%n"
@@ -319,6 +325,7 @@ public class App {
     private void changeModel() {
         System.out.println("Choose what shoes do you want to change");
         System.out.println("The List of purchaseable shoes");
+        List<Model> models = modelFacade.findAll();
         int n = 0;
         for (int i = 0; i < models.size(); i++) {
             if (models.get(i) != null && models.get(i).getQuantity()> 0) {
@@ -356,31 +363,26 @@ public class App {
                     System.out.println("Enter a new brand name: ");
                     String newBrand = scanner.nextLine();
                     models.get(numberModel - 1).setBrand(newBrand);
-                    keeper.saveModels(models);
                     break;
                 case 2:
                     System.out.println("Enter a new model name: ");
                     String newModel = scanner.nextLine();
                     models.get(numberModel - 1).setModelName(newModel);
-                    keeper.saveModels(models);
                     break;
                case 3:
                     System.out.println("Enter new size of the shoe: ");
                     int newSize = scanner.nextInt();
                     models.get(numberModel - 1).setSize(newSize);
-                    keeper.saveModels(models);
                     break;
                 case 4:
                     System.out.println("Enter new price of the shoe: ");
                     int newPrice = scanner.nextInt();
                     models.get(numberModel - 1).setPrice(newPrice);
-                    keeper.saveModels(models);
                     break;
                 case 5:
                     System.out.println("Enter new quanity: ");
                     int newQuantity = scanner.nextInt();
                     models.get(numberModel - 1).setQuantity(newQuantity);
-                    keeper.saveModels(models);
                     break;
             }
             }while ("yes".equals(repeat));           
@@ -392,6 +394,7 @@ public class App {
     private void changeBuyer() {
         System.out.println("Choose what user you want to change: ");
         System.out.println("List of registered buyers");
+        List<Buyer> buyers = buyerFacade.findAll();
         int n = 0;
         for (int i = 0; i < buyers.size(); i++) {
             if (buyers.get(i) != null) {
@@ -426,25 +429,21 @@ public class App {
                     System.out.println("Enter new first name: ");
                     String newFirstName = scanner.nextLine();
                     buyers.get(numberBuyer - 1).setFirstName(newFirstName);
-                    keeper.saveBuyers(buyers);
                     break;
                 case 2:
                     System.out.println("Enter new last name: ");
                     String newLastName = scanner.nextLine();
                     buyers.get(numberBuyer - 1).setLastName(newLastName);
-                    keeper.saveBuyers(buyers);
                     break;
                 case 3:
                     System.out.println("Enter new telephone number: ");
                     int newTel = scanner.nextInt();
                     buyers.get(numberBuyer - 1).setTel(newTel);
-                    keeper.saveBuyers(buyers);
                     break;
                 case 4:
                     System.out.println("Enter new amount of money: ");
                     int newMoney = scanner.nextInt();
                     buyers.get(numberBuyer - 1).setMoney(newMoney);
-                    keeper.saveBuyers(buyers);
                     break;
             }
         } while ("yes".equals(repeat));
@@ -456,6 +455,7 @@ public class App {
         System.out.println("Pick what year of income do you want to see: ");
         int years = getNumber();
         System.out.println("Pick what month of the year: ");
+        List<History> histories = historyFacade.findAll();
         int chosenMonth = getNumber() - 1;
         for (int i = 0; i < histories.size(); i++) {
             Date date = histories.get(i).getSoldShoes();
